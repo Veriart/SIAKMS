@@ -1,0 +1,15 @@
+/* Background sidebar */
+.fi-sidebar {
+    background-color: #0f172a;
+}
+
+/* Item menu */
+.fi-sidebar-item {
+    color: #e5e7eb;
+}
+
+/* Item aktif */
+.fi-sidebar-item-active {
+    background-color: #1e293b;
+    color: #ffffff;
+}
