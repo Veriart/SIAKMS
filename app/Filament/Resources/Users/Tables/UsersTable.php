@@ -3,13 +3,14 @@
 namespace App\Filament\Resources\Users\Tables;
 
 use components;
+use App\Models\Role;
 use Filament\Tables\Table;
 use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
-use App\Models\Role;
+use Filament\Tables\Columns\SelectColumn;
 
 class UsersTable
 {
@@ -44,6 +45,7 @@ class UsersTable
             ])
             ->recordActions([
                 EditAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

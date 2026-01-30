@@ -7,6 +7,7 @@ use Filament\PanelProvider;
 use Filament\Pages\Dashboard;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\AccountWidget;
+use Filament\Navigation\NavigationGroup;
 use Filament\Widgets\FilamentInfoWidget;
 use Filament\Http\Middleware\Authenticate;
 use Illuminate\Session\Middleware\StartSession;
@@ -22,7 +23,7 @@ use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 
 class AppPanelProvider extends PanelProvider
 {
-    
+
     public function panel(Panel $panel): Panel
     {
         return $panel
@@ -38,6 +39,11 @@ class AppPanelProvider extends PanelProvider
             ])
             ->plugins([
                 FilamentShieldPlugin::make(),
+            ])
+            ->maxContentWidth('full')
+            ->navigationGroups([
+                'Master Data',
+                'Data User',
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')

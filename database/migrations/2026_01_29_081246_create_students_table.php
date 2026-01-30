@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('classroom_id');
             $table->unsignedBigInteger('expertise_id');
             $table->unsignedBigInteger('academic_year_id');
-            $table->enum('gender', ['Male', 'Female']);
+            $table->enum('gender', ['Pria', 'Wanita']);
             $table->enum('religion', ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Budha']);
             $table->enum('status', ['Student', 'Alumni'])->default('Student');
             $table->timestamps();

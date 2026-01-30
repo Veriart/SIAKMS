@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('nip')->unique();
-            $table->enum('gender', ['Male', 'Female']);
+            $table->enum('gender', ['Pria', 'Wanita']);
             $table->enum('religion', ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Budha']);
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->timestamps();

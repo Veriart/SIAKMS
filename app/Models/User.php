@@ -20,11 +20,6 @@ class User extends Authenticatable
                     $user->syncRoles([$role->name]);
                 }
             }
-            if ($user->role_id == 2) {
-                $teacher = Teacher::create([
-                    'user_id' => $user->id,
-                ]);
-            }
         });
 
         static::updated(function ($user) {
@@ -85,5 +80,9 @@ class User extends Authenticatable
     public function student()
     {
         return $this->hasOne(Student::class);
+    }
+    public function classroom()
+    {
+        return $this->hasOne(Classroom::class);
     }
 }

@@ -16,9 +16,13 @@ use Filament\Tables\Table;
 
 class ClassroomResource extends Resource
 {
+    protected static string | \UnitEnum | null $navigationGroup = 'Master Data';
+
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-building-office-2';
+
     protected static ?string $model = Classroom::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    // protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'Classroom';
 
