@@ -15,8 +15,14 @@ use App\Filament\Resources\Teachers\Pages\CreateTeacher;
 use App\Filament\Resources\Teachers\Schemas\TeacherForm;
 use App\Filament\Resources\Teachers\Tables\TeachersTable;
 
+use App\Filament\Concerns\HasResourcePermission;
+
 class TeacherResource extends Resource
 {
+    use HasResourcePermission;
+
+    protected static ?string $permissionBase = 'Teacher';
+    
     protected static string | \UnitEnum | null $navigationGroup = 'Data User';
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user';
 

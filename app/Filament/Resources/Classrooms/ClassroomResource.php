@@ -13,9 +13,14 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use App\Filament\Concerns\HasResourcePermission;
 
 class ClassroomResource extends Resource
 {
+    use HasResourcePermission;
+
+    protected static ?string $permissionBase = 'Classroom';
+    
     protected static string | \UnitEnum | null $navigationGroup = 'Master Data';
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-building-office-2';

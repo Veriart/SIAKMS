@@ -14,8 +14,14 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
+use App\Filament\Concerns\HasResourcePermission;
+
 class ExpertiseResource extends Resource
 {
+    use HasResourcePermission;
+
+    protected static ?string $permissionBase = 'Expertise';
+    
     protected static string | \UnitEnum | null $navigationGroup = 'Master Data';
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-academic-cap';
 

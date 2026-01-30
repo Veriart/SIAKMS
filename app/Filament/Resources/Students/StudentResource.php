@@ -14,9 +14,14 @@ use App\Filament\Resources\Students\Pages\ListStudents;
 use App\Filament\Resources\Students\Pages\CreateStudent;
 use App\Filament\Resources\Students\Schemas\StudentForm;
 use App\Filament\Resources\Students\Tables\StudentsTable;
+use App\Filament\Concerns\HasResourcePermission;
 
 class StudentResource extends Resource
 {
+    use HasResourcePermission;
+
+    protected static ?string $permissionBase = 'Student';
+
     protected static string | \UnitEnum | null $navigationGroup = 'Data User';
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-group';
 
