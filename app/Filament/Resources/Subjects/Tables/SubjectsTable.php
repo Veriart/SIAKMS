@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Subjects\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class SubjectsTable
@@ -13,7 +14,10 @@ class SubjectsTable
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('name')
+                    ->label('Mata Pelajaran')
+                    ->sortable()
+                    ->searchable(),
             ])
             ->filters([
                 //

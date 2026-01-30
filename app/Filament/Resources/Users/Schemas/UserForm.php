@@ -7,6 +7,8 @@ use App\Models\Role;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 
 class UserForm
 {
@@ -37,6 +39,42 @@ class UserForm
                         'Inactive' => 'Inactive',
                     ])
                     ->default('Active'),
+
+                /*
+                 |----------------------
+                 | FORM STUDENT
+                 |----------------------
+                 */
+                Section::make('Student Data')
+                    ->schema([
+                        TextInput::make('student.nis')
+                            ->label('NIS'),
+
+                        TextInput::make('student.class')
+                            ->label('Class'),
+                    ])
+                    ->visible(function (Get $get) {
+                        $roleId = $get('role_id');
+                        return Role::find($roleId)?->name === 'student';
+                    }),
+
+                /*
+                 |----------------------
+                 | FORM TEACHER
+                 |----------------------
+                 */
+                Section::make('Teacher Data')
+                    ->schema([
+                        TextInput::make('teacher.nip')
+                            ->label('NIP'),
+
+                        TextInput::make('teacher.subject')
+                            ->label('Subject'),
+                    ])
+                    ->visible(function (Get $get) {
+                        $roleId = $get('role_id');
+                        return Role::find($roleId)?->name === 'teacher';
+                    }),
             ]);
     }
 }

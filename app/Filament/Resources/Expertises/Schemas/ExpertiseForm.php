@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Expertises\Schemas;
 
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 
 class ExpertiseForm
@@ -10,7 +11,9 @@ class ExpertiseForm
     {
         return $schema
             ->components([
-                //
+                TextInput::make('name')
+                    ->label('Nama Expertise')
+                    ->required(),
             ]);
     }
 }

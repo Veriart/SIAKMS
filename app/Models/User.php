@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
-use App\Models\Role;
+use App\Models\{Role, Subject, Student, Teacher};
 
 class User extends Authenticatable
 {
@@ -19,6 +19,11 @@ class User extends Authenticatable
                 if ($role) {
                     $user->syncRoles([$role->name]);
                 }
+            }
+            if ($user->role_id == 2) {
+                $teacher = Teacher::create([
+                    'user_id' => $user->id,
+                ]);
             }
         });
 
@@ -71,5 +76,14 @@ class User extends Authenticatable
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function teacher()
+    {
+        return $this->hasOne(Teacher::class);
+    }
+    public function student()
+    {
+        return $this->hasOne(Student::class);
     }
 }

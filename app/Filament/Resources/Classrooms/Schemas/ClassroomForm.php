@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Classrooms\Schemas;
 
 use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
 
 class ClassroomForm
 {
@@ -10,7 +11,10 @@ class ClassroomForm
     {
         return $schema
             ->components([
-                //
+                TextInput::make('name')
+                    ->label('Nama Kelas')
+                    ->required()
+                    ->maxLength(255),
             ]);
     }
 }
