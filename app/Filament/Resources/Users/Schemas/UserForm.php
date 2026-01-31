@@ -76,8 +76,8 @@ class UserForm
                                     Select::make('gender')
                                         ->label('Gender')
                                         ->options([
-                                            'Pria' => 'Pria',
-                                            'Wanita' => 'Wanita',
+                                            'Laki-laki' => 'Laki-laki',
+                                            'Perempuan' => 'Perempuan',
                                         ])
                                         ->required(),
                                     Select::make('religion')
@@ -118,8 +118,8 @@ class UserForm
                                     Select::make('gender')
                                         ->label('Gender')
                                         ->options([
-                                            'Pria' => 'Pria',
-                                            'Wanita' => 'Wanita',
+                                            'Laki-laki' => 'Laki-laki',
+                                            'Perempuan' => 'Perempuan',
                                         ])
                                         ->required(),
                                     Select::make('religion')
