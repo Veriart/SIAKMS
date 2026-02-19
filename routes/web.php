@@ -8,3 +8,4 @@ Route::get('/', function () {
 });
 
 Route::get('/data/sync-sheet', [SheetImportController::class, 'sync']);
+Route::get('/data/urole', [SheetImportController::class, 'urole']);

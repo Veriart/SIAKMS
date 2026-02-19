@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('nis');
+            $table->string('student_number');
             $table->unsignedBigInteger('classroom_id');
             $table->unsignedBigInteger('expertise_id');
             $table->unsignedBigInteger('academic_year_id');
-            $table->enum('gender', ['Pria', 'Wanita']);
-            $table->enum('religion', ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Budha']);
+            $table->enum('gender', ['Laki-laki', 'Perempuan']);
+            $table->enum('religion', ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha'])->nullable();
             $table->enum('status', ['Student', 'Alumni'])->default('Student');
             $table->timestamps();
         });

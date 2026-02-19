@@ -19,8 +19,8 @@ class StudentsTable
                     ->label('User')
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('nis')
-                    ->label('NIS')
+                TextColumn::make('student_number')
+                    ->label('No. Induk')
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('classroom.name')

@@ -32,7 +32,7 @@ class TeacherForm
                         'Kristen' => 'Kristen',
                         'Katolik' => 'Katolik',
                         'Hindu' => 'Hindu',
-                        'Budha' => 'Budha',
+                        'Buddha' => 'Buddha',
                     ])
                     ->required(),
                 Select::make('status')

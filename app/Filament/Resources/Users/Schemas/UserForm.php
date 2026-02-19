@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
-use components;
 use App\Models\Role;
 use App\Models\Subject;
 use Filament\Schemas\Schema;
@@ -69,7 +68,7 @@ class UserForm
                                 'md' => 2,
                             ])
                                 ->schema([
-                                    TextInput::make('nis')->label('NIS')->required(),
+                                    TextInput::make('student_number')->label('No. Induk')->required(),
                                     Select::make('classroom_id')->label('Class Room')->relationship('classroom', 'name')->required(),
                                     Select::make('expertise_id')->label('Expertise')->relationship('expertise', 'name')->required(),
                                     Select::make('academic_year_id')->label('Academic Year')->relationship('academicYear', 'in')->required(),
@@ -87,7 +86,7 @@ class UserForm
                                             'Kristen' => 'Kristen',
                                             'Katolik' => 'Katolik',
                                             'Hindu' => 'Hindu',
-                                            'Budha' => 'Budha',
+                                            'Buddha' => 'Buddha',
                                         ])
                                         ->required(),
                                     Select::make('status')
@@ -129,7 +128,7 @@ class UserForm
                                             'Kristen' => 'Kristen',
                                             'Katolik' => 'Katolik',
                                             'Hindu' => 'Hindu',
-                                            'Budha' => 'Budha',
+                                            'Buddha' => 'Buddha',
                                         ])
                                         ->required(),
                                     Select::make('status')
