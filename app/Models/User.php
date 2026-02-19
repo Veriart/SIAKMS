@@ -8,8 +8,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\{Role, Subject, Student, Teacher};
+use Illuminate\Support\Facades\Storage;
+use Filament\Models\Contracts\HasAvatar;
 
-class User extends Authenticatable
+class User extends Authenticatable implements HasAvatar
 {
     protected static function booted()
     {
@@ -43,6 +45,7 @@ class User extends Authenticatable
         'password',
         'role_id',
         'status',
+        'photo',
     ];
 
     /**
@@ -84,5 +87,11 @@ class User extends Authenticatable
     public function classroom()
     {
         return $this->hasOne(Classroom::class);
+    }
+    
+    public function getFilamentAvatarUrl(): ?string
+    {
+        $avatarColumn = config('filament-edit-profile.avatar_column', 'photo');
+        return $this->$avatarColumn ? Storage::url($this->$avatarColumn) : null;
     }
 }
