@@ -8,7 +8,7 @@ class Student extends Model
 {
     protected $fillable = [
         'user_id',
-        'student_number',
+        'identification_number',
         'classroom_id',
         'expertise_id',
         'academic_year_id',

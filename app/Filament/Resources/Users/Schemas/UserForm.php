@@ -68,7 +68,7 @@ class UserForm
                                 'md' => 2,
                             ])
                                 ->schema([
-                                    TextInput::make('student_number')->label('No. Induk')->required(),
+                                    TextInput::make('identification_number')->label('No. Induk')->required(),
                                     Select::make('classroom_id')->label('Class Room')->relationship('classroom', 'name')->required(),
                                     Select::make('expertise_id')->label('Expertise')->relationship('expertise', 'name')->required(),
                                     Select::make('academic_year_id')->label('Academic Year')->relationship('academicYear', 'in')->required(),

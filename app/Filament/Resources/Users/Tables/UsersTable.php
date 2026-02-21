@@ -31,6 +31,15 @@ class UsersTable
                     ->options(Role::pluck('name', 'id')->toArray())
                     ->searchable()
                     ->sortable(),
+                // SelectColumn::make('custom_fields.gender')
+                //     ->label('Gender')
+                //     ->options([
+                //         'Laki-laki' => 'Laki-laki',
+                //         'Perempuan' => 'Perempuan',
+                //     ])
+                //     ->default(fn ($record) => $record->custom_fields['gender'] ?? null)
+                //     ->searchable()
+                //     ->sortable(),
                 SelectColumn::make('status')
                     ->label('Status')
                     ->options([

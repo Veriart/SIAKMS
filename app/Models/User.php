@@ -46,6 +46,7 @@ class User extends Authenticatable implements HasAvatar
         'role_id',
         'status',
         'photo',
+        'custom_fields',
     ];
 
     /**
@@ -88,10 +89,19 @@ class User extends Authenticatable implements HasAvatar
     {
         return $this->hasOne(Classroom::class);
     }
-    
+
     public function getFilamentAvatarUrl(): ?string
     {
         $avatarColumn = config('filament-edit-profile.avatar_column', 'photo');
         return $this->$avatarColumn ? Storage::url($this->$avatarColumn) : null;
     }
+
+    public function getStudentGenderAttribute()
+    {
+        return $this->student?->gender;
+    }
+
+    protected $casts = [
+        'custom_fields' => 'array',
+    ];
 }

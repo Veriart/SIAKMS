@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('teachers', function (Blueprint $table) {
             $table->id();
+            $table->string('identification_number');
             $table->unsignedBigInteger('user_id');
-            $table->string('nip')->unique();
             $table->enum('gender', ['Pria', 'Wanita']);
             $table->enum('religion', ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha']);
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
