@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Users\Schemas;
 
 use App\Models\Role;
-use App\Models\Subject;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Grid;

@@ -10,11 +10,14 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "barryvdh/laravel-dompdf": "^3.1",
         "bezhansalleh/filament-shield": "^4.0",
         "filament/filament": "^4.5",
         "joaopaulolndev/filament-edit-profile": "2.0",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
+        "setasign/fpdf": "^1.8",
+        "setasign/fpdi": "^2.6",
         "spatie/laravel-permission": "^6.24"
     },
     "require-dev": {

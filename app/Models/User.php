@@ -33,6 +33,7 @@ class User extends Authenticatable implements HasAvatar
             }
         });
     }
+    
     use HasFactory, Notifiable, HasRoles;
 
     /**

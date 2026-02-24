@@ -39,7 +39,8 @@ class InternalMemosTable
                     ->label('Dispen File')
                     ->formatStateUsing(fn($state) => 'Dispen File')
                     ->url(fn($record) => asset('storage/' . $record->dispen_file))
-                    ->openUrlInNewTab(),
+                    ->openUrlInNewTab()
+                     ->visible(fn () => auth()->user()?->hasRole('Super Admin')),
             ])
             ->filters([
                 //
