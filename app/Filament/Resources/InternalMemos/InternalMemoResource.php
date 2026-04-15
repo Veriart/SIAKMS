@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Auth;
 class InternalMemoResource extends Resource
 {
     protected static ?string $model = InternalMemo::class;
+    
+    protected static string | \UnitEnum | null $navigationGroup = 'Administrasi';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 

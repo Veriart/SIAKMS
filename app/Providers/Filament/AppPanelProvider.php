@@ -2,6 +2,9 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Widgets\ChartDashboard;
+use App\Filament\Widgets\DashboardOverview;
+use App\Filament\Widgets\StatsDashboard;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Actions\Action;
 use Filament\Http\Middleware\Authenticate;
@@ -13,8 +16,6 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets\AccountWidget;
-use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -60,6 +61,7 @@ class AppPanelProvider extends PanelProvider
             ])
             ->maxContentWidth('full')
             ->navigationGroups([
+                'Administrasi',
                 'Master Data',
                 'Data User',
             ])
@@ -73,11 +75,15 @@ class AppPanelProvider extends PanelProvider
             ->pages([
                 Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
+            // ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
-                AccountWidget::class,
-                FilamentInfoWidget::class,
+                // \App\Filament\Widgets\WelcomeWidget::class,
+                \App\Filament\Widgets\StatsDashboard::class,
+                \App\Filament\Widgets\ChartDashboard::class,
+                \App\Filament\Widgets\StudentGenderChart::class,
+                \App\Filament\Widgets\LatestInternalMemos::class,
             ])
+            // ->databaseWidgetsColumns(5)
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
