@@ -81,6 +81,7 @@ class AppPanelProvider extends PanelProvider
                 \App\Filament\Widgets\StatsDashboard::class,
                 \App\Filament\Widgets\ChartDashboard::class,
                 \App\Filament\Widgets\StudentGenderChart::class,
+                \App\Filament\Widgets\LatestActivityInformations::class,
                 \App\Filament\Widgets\LatestInternalMemos::class,
             ])
             // ->databaseWidgetsColumns(5)
