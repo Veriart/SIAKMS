@@ -36,7 +36,8 @@ class AppPanelProvider extends PanelProvider
             ->path('app')
             ->login()
             ->brandName('SIAK Metschoo')
-            ->brandLogo(asset('img/LogoMetschoo.png'))
+            ->brandLogo(asset('img/LogoSIAKMS.png'))
+            ->favicon(asset('img/LogoMetschoo.png'))
             ->brandLogoHeight('3rem')
             ->colors([
                 'primary' => Color::Blue,

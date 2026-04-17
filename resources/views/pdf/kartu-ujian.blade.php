@@ -4,14 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="{{ asset('img/LogoMetschoo.png') }}">
     <title>Kartu Ujian - {{ $student->user->name }}</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-        * {
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+
+        html {
+            font-size: 16px;
         }
 
         body {
@@ -19,9 +26,9 @@
             background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 50%, #2563eb 100%);
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             min-height: 100vh;
-            padding: 20px;
+            padding: clamp(12px, 4vw, 24px);
         }
 
         .wrapper {
@@ -29,21 +36,24 @@
             flex-direction: column;
             align-items: center;
             gap: 16px;
+            width: 100%;
+            max-width: 480px;
         }
 
+        /* ── Card ── */
         .card {
             background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
-            width: 420px;
+            border-radius: clamp(10px, 3vw, 16px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
+            width: 100%;
             overflow: hidden;
             position: relative;
         }
 
-        /* Header gradient section */
+        /* ── Header ── */
         .card-header {
             background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
-            padding: 24px 28px 20px;
+            padding: clamp(16px, 5vw, 24px) clamp(16px, 5vw, 28px) clamp(14px, 4vw, 20px);
             color: white;
             position: relative;
             overflow: hidden;
@@ -58,6 +68,7 @@
             height: 120px;
             background: rgba(255, 255, 255, 0.08);
             border-radius: 50%;
+            pointer-events: none;
         }
 
         .card-header::after {
@@ -69,6 +80,21 @@
             height: 80px;
             background: rgba(255, 255, 255, 0.06);
             border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-text {
+            flex: 1;
+            min-width: 0;
         }
 
         .header-badge {
@@ -76,40 +102,52 @@
             background: rgba(255, 255, 255, 0.15);
             border: 1px solid rgba(255, 255, 255, 0.3);
             color: #bfdbfe;
-            font-size: 10px;
+            font-size: clamp(9px, 2.2vw, 10px);
             font-weight: 600;
-            letter-spacing: 1.5px;
+            letter-spacing: 1.2px;
             text-transform: uppercase;
-            padding: 4px 12px;
+            padding: 4px 10px;
             border-radius: 100px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .card-header h1 {
-            font-size: 26px;
+            font-size: clamp(20px, 5.5vw, 26px);
             font-weight: 800;
             letter-spacing: 2px;
             text-transform: uppercase;
             color: #ffffff;
-            position: relative;
-            z-index: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .header-sub {
-            font-size: 13px;
             color: #bfdbfe;
-            margin-top: 4px;
-            position: relative;
-            z-index: 1;
+            margin-top: 2px;
         }
 
-        /* Status badge */
+        .header-sub.lg {
+            font-size: clamp(12px, 3.2vw, 14px);
+        }
+
+        .header-sub.sm {
+            font-size: clamp(10px, 2.8vw, 12px);
+        }
+
+        .header-logo {
+            width: clamp(60px, 18vw, 90px);
+            height: auto;
+            flex-shrink: 0;
+        }
+
+        /* ── Status bar ── */
         .status-bar {
-            padding: 10px 28px;
+            padding: 10px clamp(16px, 5vw, 28px);
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 12px;
+            font-size: clamp(10px, 2.8vw, 12px);
             font-weight: 700;
             letter-spacing: 0.5px;
             text-transform: uppercase;
@@ -130,6 +168,7 @@
         .status-dot {
             width: 8px;
             height: 8px;
+            min-width: 8px;
             border-radius: 50%;
             animation: pulse 1.5s infinite;
         }
@@ -143,30 +182,39 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(0.85); }
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.6;
+                transform: scale(0.85);
+            }
         }
 
-        /* Card body */
+        /* ── Card body ── */
         .card-body {
-            padding: 20px 28px;
+            padding: clamp(14px, 4vw, 20px) clamp(16px, 5vw, 28px);
         }
 
         .info-grid {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
 
         .info-row {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
-            padding: 10px 14px;
+            gap: 10px;
+            padding: clamp(8px, 2.5vw, 10px) clamp(10px, 3vw, 14px);
             border-radius: 10px;
             background: #f8fafc;
             border: 1px solid #e2e8f0;
-            transition: background 0.2s;
+            transition: background 0.2s, border-color 0.2s;
         }
 
         .info-row:hover {
@@ -175,8 +223,9 @@
         }
 
         .info-icon {
-            width: 32px;
-            height: 32px;
+            width: clamp(28px, 7vw, 32px);
+            height: clamp(28px, 7vw, 32px);
+            min-width: clamp(28px, 7vw, 32px);
             border-radius: 8px;
             background: linear-gradient(135deg, #1e3a8a, #2563eb);
             display: flex;
@@ -186,8 +235,8 @@
         }
 
         .info-icon svg {
-            width: 16px;
-            height: 16px;
+            width: clamp(13px, 3.5vw, 16px);
+            height: clamp(13px, 3.5vw, 16px);
             fill: none;
             stroke: white;
             stroke-width: 2;
@@ -197,10 +246,11 @@
 
         .info-content {
             flex: 1;
+            min-width: 0;
         }
 
         .info-label {
-            font-size: 10px;
+            font-size: clamp(9px, 2.2vw, 10px);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.8px;
@@ -209,18 +259,20 @@
         }
 
         .info-value {
-            font-size: 14px;
+            font-size: clamp(13px, 3.2vw, 14px);
             font-weight: 600;
             color: #0f172a;
+            word-break: break-word;
         }
 
-        /* QR Code section */
+        /* ── QR section ── */
         .qr-section {
-            padding: 20px 28px;
+            padding: clamp(14px, 4vw, 20px) clamp(16px, 5vw, 28px);
             border-top: 1px solid #e2e8f0;
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: clamp(12px, 4vw, 20px);
+            flex-wrap: wrap;
         }
 
         .qr-wrapper {
@@ -229,15 +281,25 @@
             border-radius: 12px;
             padding: 8px;
             flex-shrink: 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            /* Scale the QR on very small screens */
+            max-width: clamp(90px, 28vw, 116px);
+        }
+
+        .qr-wrapper svg,
+        .qr-wrapper img {
+            width: 100% !important;
+            height: auto !important;
+            display: block;
         }
 
         .qr-info {
             flex: 1;
+            min-width: 120px;
         }
 
         .qr-title {
-            font-size: 12px;
+            font-size: clamp(11px, 3vw, 12px);
             font-weight: 700;
             color: #1e3a8a;
             text-transform: uppercase;
@@ -246,78 +308,76 @@
         }
 
         .qr-desc {
-            font-size: 11px;
+            font-size: clamp(10px, 2.6vw, 11px);
             color: #64748b;
             line-height: 1.5;
         }
 
         .qr-url {
-            font-size: 10px;
+            font-size: clamp(9px, 2.4vw, 10px);
             color: #2563eb;
             font-weight: 500;
             margin-top: 6px;
             word-break: break-all;
         }
 
-        /* Footer */
+        /* ── Footer ── */
         .card-footer {
-            padding: 12px 28px;
+            padding: 10px clamp(16px, 5vw, 28px);
             background: #f8fafc;
             border-top: 1px solid #e2e8f0;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
         }
 
-        .footer-left {
-            font-size: 10px;
-            color: #94a3b8;
-        }
-
+        .footer-left,
         .footer-right {
-            font-size: 10px;
+            font-size: clamp(9px, 2.2vw, 10px);
             color: #94a3b8;
         }
 
-        /* Print button */
+        /* ── Print button ── */
         .btn-print {
             display: block;
-            width: 420px;
-            padding: 14px;
+            width: 100%;
+            padding: clamp(12px, 3.5vw, 14px);
             background: linear-gradient(135deg, #ffffff, #f0f9ff);
             color: #1e3a8a;
-            border: 2px solid rgba(255,255,255,0.5);
+            border: 2px solid rgba(255, 255, 255, 0.5);
             border-radius: 12px;
             cursor: pointer;
-            font-size: 15px;
+            font-size: clamp(13px, 3.5vw, 15px);
             font-weight: 700;
             font-family: 'Inter', Arial, sans-serif;
             letter-spacing: 0.5px;
             text-align: center;
             transition: all 0.2s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         .btn-print:hover {
             background: white;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
         }
 
         .btn-print:active {
             transform: translateY(0);
         }
 
-        /* Print media */
+        /* ── Print media ── */
         @media print {
             body {
                 background: none;
-                align-items: flex-start;
+                min-height: unset;
                 padding: 0;
             }
 
             .wrapper {
-                align-items: flex-start;
+                max-width: 100%;
             }
 
             .card {
@@ -336,8 +396,15 @@
             }
 
             @keyframes pulse {
-                0%, 100% { opacity: 1; }
-                50% { opacity: 1; }
+
+                0%,
+                100% {
+                    opacity: 1;
+                }
+
+                50% {
+                    opacity: 1;
+                }
             }
         }
     </style>
@@ -346,26 +413,40 @@
 <body>
     <div class="wrapper">
         <div class="card">
+
             {{-- Header --}}
             <div class="card-header">
-                <div class="header-badge">Sistem Informasi Akademik</div>
-                <h1>Kartu Ujian</h1>
-                <p class="header-sub">Tahun Akademik: {{ $student->academicYear->in ?? '-' }}</p>
+                <div class="header-row">
+                    <div class="header-text">
+                        <div class="header-badge">Sistem Informasi Akademik</div>
+                        <h1>Kartu Ujian</h1>
+                        <p class="header-sub lg">Asesmen Sumatif Akhir Semester</p>
+                        <p class="header-sub sm">Tahun Akademik: 2025-2026</p>
+                    </div>
+                    <img
+                        src="{{ asset('/img/LogoMetschoo.png') }}"
+                        alt="Logo Metschoo"
+                        class="header-logo">
+                </div>
             </div>
 
             {{-- Status akses ujian --}}
             <div class="status-bar {{ $student->exam_access ? 'allowed' : 'blocked' }}">
                 <span class="status-dot"></span>
-                Akses Ujian: {{ $student->exam_access ? 'DIIZINKAN' : 'DIBLOKIR' }}
+                Akses Ujian: {{ $student->exam_access ? 'DIIZINKAN' : 'BELUM DIIZINKAN' }}
             </div>
 
             {{-- Data siswa --}}
             <div class="card-body">
                 <div class="info-grid">
+
                     {{-- No. Induk --}}
                     <div class="info-row">
                         <div class="info-icon">
-                            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h6"/></svg>
+                            <svg viewBox="0 0 24 24">
+                                <rect x="3" y="4" width="18" height="16" rx="2" />
+                                <path d="M7 8h10M7 12h6" />
+                            </svg>
                         </div>
                         <div class="info-content">
                             <div class="info-label">No. Induk Siswa</div>
@@ -376,7 +457,10 @@
                     {{-- Nama --}}
                     <div class="info-row">
                         <div class="info-icon">
-                            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                            <svg viewBox="0 0 24 24">
+                                <circle cx="12" cy="8" r="4" />
+                                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                            </svg>
                         </div>
                         <div class="info-content">
                             <div class="info-label">Nama Siswa</div>
@@ -387,7 +471,10 @@
                     {{-- Kelas --}}
                     <div class="info-row">
                         <div class="info-icon">
-                            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                            <svg viewBox="0 0 24 24">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                                <polyline points="9 22 9 12 15 12 15 22" />
+                            </svg>
                         </div>
                         <div class="info-content">
                             <div class="info-label">Kelas</div>
@@ -398,7 +485,9 @@
                     {{-- Keahlian --}}
                     <div class="info-row">
                         <div class="info-icon">
-                            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                            </svg>
                         </div>
                         <div class="info-content">
                             <div class="info-label">Kompetensi Keahlian</div>
@@ -409,13 +498,16 @@
                     {{-- Jenis Kelamin --}}
                     <div class="info-row">
                         <div class="info-icon">
-                            <svg viewBox="0 0 24 24"><path d="M17 3h4v4M21 3l-7 7M9 21a6 6 0 100-12 6 6 0 000 12z"/></svg>
+                            <svg viewBox="0 0 24 24">
+                                <path d="M17 3h4v4M21 3l-7 7M9 21a6 6 0 100-12 6 6 0 000 12z" />
+                            </svg>
                         </div>
                         <div class="info-content">
                             <div class="info-label">Jenis Kelamin</div>
                             <div class="info-value">{{ $student->gender ?? '-' }}</div>
                         </div>
                     </div>
+
                 </div>
             </div>
 
@@ -425,7 +517,7 @@
                     {!! QrCode::size(100)->generate(route('kartu.ujian', $student->slug)) !!}
                 </div>
                 <div class="qr-info">
-                    <div class="qr-title">🔐 Verifikasi Kartu</div>
+                    <div class="qr-title">&#128272; Verifikasi Kartu</div>
                     <div class="qr-desc">Scan QR Code ini untuk mengakses kartu ujian secara digital melalui perangkat apapun.</div>
                     <div class="qr-url">{{ url('/kartu-ujian/' . $student->slug) }}</div>
                 </div>
@@ -440,7 +532,7 @@
 
         {{-- Print button (hidden on print) --}}
         <button class="btn-print" onclick="window.print()">
-            🖨️ Cetak Kartu Ujian
+            &#128424; Cetak Kartu Ujian
         </button>
     </div>
 </body>

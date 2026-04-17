@@ -13,20 +13,25 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use App\Filament\Concerns\HasResourcePermission;
 
 class ActivityInformationResource extends Resource
 {
+    use HasResourcePermission;
+
+    protected static ?string $permissionBase = 'ActivityInformation';
+
     protected static ?string $model = ActivityInformation::class;
 
     protected static string | \UnitEnum | null $navigationGroup = 'Administrasi';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDays;
 
-    protected static ?string $navigationLabel = 'Informasi Kegiatan';
+    protected static ?string $navigationLabel = 'Activity Information';
 
-    protected static ?string $modelLabel = 'Informasi Kegiatan';
+    protected static ?string $modelLabel = 'Activity Information';
 
-    protected static ?string $pluralModelLabel = 'Informasi Kegiatan';
+    protected static ?string $pluralModelLabel = 'Activity Information';
 
     public static function form(Schema $schema): Schema
     {
