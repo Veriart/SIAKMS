@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\InternalMemos\Tables;
 
+use App\Filament\Concerns\ExportHelper;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -10,6 +11,20 @@ use Filament\Tables\Table;
 
 class InternalMemosTable
 {
+    private static function exportColumns(): array
+    {
+        return [
+            'letter_number' => 'No. Surat',
+            'ref' => 'No. Referensi',
+            'pic_name' => 'Nama PIC',
+            'reason' => 'Keterangan/Perihal',
+            'date' => 'Hari,Tanggal',
+            'time' => 'Waktu',
+            'place' => 'Tempat Pelaksanaan',
+            'note' => 'Catatan',
+        ];
+    }
+
     public static function configure(Table $table): Table
     {
         return $table
@@ -45,12 +60,17 @@ class InternalMemosTable
             ->filters([
                 //
             ])
+            ->headerActions([
+                ExportHelper::excelAction('data_memo_internal', static::exportColumns()),
+                ExportHelper::pdfAction('data_memo_internal', static::exportColumns(), 'Data Memo Internal'),
+            ])
             ->recordActions([
                 EditAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->visible(fn() => auth()->user()->can('delete data')),
                 ]),
             ]);
     }

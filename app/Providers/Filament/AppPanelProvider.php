@@ -58,7 +58,15 @@ class AppPanelProvider extends PanelProvider
                 'profile' => Action::make('profile')
                     ->label(fn() => auth()->user()->name)
                     ->url(fn(): string => EditProfilePage::getUrl())
-                    ->icon('heroicon-m-user-circle')
+                    ->icon('heroicon-m-user-circle'),
+                'kartu_ujian' => Action::make('kartu_ujian')
+                    ->label('Kartu Ujian')
+                    ->icon('heroicon-o-identification')
+                    ->url(fn () => auth()->user()->student
+                        ? route('kartu.ujian', auth()->user()->student->slug)
+                        : '#')
+                    ->openUrlInNewTab()
+                    ->visible(fn () => auth()->user()?->hasRole('Student') && auth()->user()?->student),
             ])
             ->maxContentWidth('full')
             ->navigationGroups([

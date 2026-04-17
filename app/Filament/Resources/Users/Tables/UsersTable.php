@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Users\Tables;
 
+use App\Filament\Concerns\ExportHelper;
 use components;
 use App\Models\Role;
 use Filament\Tables\Table;
@@ -14,6 +15,16 @@ use Filament\Tables\Columns\SelectColumn;
 
 class UsersTable
 {
+    private static function exportColumns(): array
+    {
+        return [
+            'name' => 'Nama',
+            'email' => 'Email',
+            'role.name' => 'Role',
+            'status' => 'Status',
+        ];
+    }
+
     public static function configure(Table $table): Table
     {
         return $table
@@ -52,13 +63,18 @@ class UsersTable
             ->filters([
                 //
             ])
+            ->headerActions([
+                ExportHelper::excelAction('data_user', static::exportColumns()),
+                ExportHelper::pdfAction('data_user', static::exportColumns(), 'Data User'),
+            ])
             ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->visible(fn() => auth()->user()->can('delete data')),
                 ]),
             ]);
     }

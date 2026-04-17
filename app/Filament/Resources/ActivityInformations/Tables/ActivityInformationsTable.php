@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ActivityInformations\Tables;
 
+use App\Filament\Concerns\ExportHelper;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -10,6 +11,16 @@ use Filament\Tables\Table;
 
 class ActivityInformationsTable
 {
+    private static function exportColumns(): array
+    {
+        return [
+            'name' => 'Nama Kegiatan',
+            'execution_date' => 'Tanggal Pelaksanaan',
+            'execution_place' => 'Tempat Pelaksanaan',
+            'created_at' => 'Dibuat',
+        ];
+    }
+
     public static function configure(Table $table): Table
     {
         return $table
@@ -40,12 +51,18 @@ class ActivityInformationsTable
             ->filters([
                 //
             ])
+            ->headerActions([
+                ExportHelper::excelAction('data_kegiatan', static::exportColumns()),
+                ExportHelper::pdfAction('data_kegiatan', static::exportColumns(), 'Data Kegiatan'),
+            ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()
+                    ->visible(fn() => auth()->user()->can('update data')),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->visible(fn() => auth()->user()->can('delete data')),
                 ]),
             ]);
     }

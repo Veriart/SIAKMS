@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Teachers\Tables;
 
+use App\Filament\Concerns\ExportHelper;
 use Filament\Tables\Table;
 use Filament\Actions\EditAction;
 use Filament\Actions\BulkActionGroup;
@@ -11,6 +12,17 @@ use Filament\Tables\Columns\BadgeColumn;
 
 class TeachersTable
 {
+    private static function exportColumns(): array
+    {
+        return [
+            'user.name' => 'Nama',
+            'nip' => 'NIP',
+            'gender' => 'Jenis Kelamin',
+            'religion' => 'Agama',
+            'status' => 'Status',
+        ];
+    }
+
     public static function configure(Table $table): Table
     {
         return $table
@@ -43,12 +55,17 @@ class TeachersTable
             ->filters([
                 //
             ])
+            ->headerActions([
+                ExportHelper::excelAction('data_guru', static::exportColumns()),
+                ExportHelper::pdfAction('data_guru', static::exportColumns(), 'Data Guru'),
+            ])
             ->recordActions([
                 EditAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->visible(fn() => auth()->user()->can('delete data')),
                 ]),
             ]);
     }

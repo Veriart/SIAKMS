@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\TeacherAdministrations\Tables;
 
+use App\Filament\Concerns\ExportHelper;
 use App\Models\AcademicYear;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -12,6 +13,16 @@ use Filament\Tables\Table;
 
 class TeacherAdministrationsTable
 {
+    private static function exportColumns(): array
+    {
+        return [
+            'user.name' => 'Guru',
+            'name' => 'Administrasi',
+            'category' => 'Kategori',
+            'semester' => 'Semester',
+        ];
+    }
+
     public static function configure(Table $table): Table
     {
         return $table
@@ -58,12 +69,17 @@ class TeacherAdministrationsTable
             ->filters([
                 //
             ])
+            ->headerActions([
+                ExportHelper::excelAction('data_adm_guru', static::exportColumns()),
+                ExportHelper::pdfAction('data_adm_guru', static::exportColumns(), 'Data Administrasi Guru'),
+            ])
             ->recordActions([
                 EditAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->visible(fn() => auth()->user()->can('delete data')),
                 ]),
             ]);
     }
