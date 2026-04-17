@@ -8,6 +8,8 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Columns\ToggleColumn;
+use Filament\Actions\Action;
 
 class StudentsTable
 {
@@ -52,11 +54,19 @@ class StudentsTable
                     ->default('Student')
                     ->sortable()
                     ->searchable(),
+                ToggleColumn::make('exam_access')
+                    ->label('Akses Ujian')
+                    ->sortable(),
             ])
             ->filters([
                 //
             ])
             ->recordActions([
+                Action::make('kartu_ujian')
+                    ->label('Kartu Ujian')
+                    ->icon('heroicon-o-identification')
+                    ->url(fn ($record) => route('kartu.ujian', $record))
+                    ->openUrlInNewTab(),
                 EditAction::make(),
             ])
             ->toolbarActions([
