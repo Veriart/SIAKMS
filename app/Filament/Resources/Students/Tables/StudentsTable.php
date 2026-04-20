@@ -39,7 +39,7 @@ class StudentsTable
                     ->label('User')
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('student_number')
+                TextColumn::make('identification_number')
                     ->label('No. Induk')
                     ->sortable()
                     ->searchable(),
