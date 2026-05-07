@@ -17,6 +17,7 @@ class ActivityInformationsTable
             'name' => 'Nama Kegiatan',
             'execution_date' => 'Tanggal Pelaksanaan',
             'execution_place' => 'Tempat Pelaksanaan',
+            'target_audience' => 'Ditujukan Kepada',
             'created_at' => 'Dibuat',
         ];
     }
@@ -36,6 +37,48 @@ class ActivityInformationsTable
                 TextColumn::make('execution_place')
                     ->label('Tempat Pelaksanaan')
                     ->searchable(),
+                TextColumn::make('target_audience')
+                    ->label('Ditujukan Kepada')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'all' => 'Semua',
+                        'teachers' => 'Guru',
+                        'students' => 'Siswa',
+                        default => '-',
+                    })
+                    ->color(fn (string $state): string => match ($state) {
+                        'all' => 'primary',
+                        'teachers' => 'success',
+                        'students' => 'warning',
+                        default => 'gray',
+                    })
+                    ->sortable(),
+                TextColumn::make('target_label')
+                    ->label('Detail Target')
+                    ->getStateUsing(function ($record) {
+                        if ($record->target_audience === 'all') {
+                            return 'Semua (Guru & Siswa)';
+                        }
+                        if ($record->target_audience === 'teachers') {
+                            return 'Guru Saja';
+                        }
+                        if ($record->student_scope === 'all_students') {
+                            return 'Semua Siswa';
+                        }
+                        // Specific classrooms - tampilkan detail dengan expertise
+                        $classroomDetails = $record->classrooms()
+                            ->withPivot('expertise_id')
+                            ->get()
+                            ->map(function ($classroom) {
+                                $expertise = $classroom->pivot->expertise_id
+                                    ? \App\Models\Expertise::find($classroom->pivot->expertise_id)
+                                    : null;
+                                return trim($classroom->name . ' ' . ($expertise->name ?? ''));
+                            })
+                            ->join(', ');
+                        return $classroomDetails ?: '-';
+                    })
+                    ->wrap(),
                 TextColumn::make('document_file')
                     ->label('Dokumen')
                     ->formatStateUsing(fn($state) => $state ? 'Lihat Dokumen' : '-')

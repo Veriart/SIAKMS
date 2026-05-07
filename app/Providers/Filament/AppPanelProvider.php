@@ -71,6 +71,7 @@ class AppPanelProvider extends PanelProvider
             ->maxContentWidth('full')
             ->navigationGroups([
                 'Administrasi',
+                'Ujian',
                 'Master Data',
                 'Data User',
             ])

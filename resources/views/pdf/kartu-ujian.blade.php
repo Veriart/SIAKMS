@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="{{ asset('img/LogoMetschoo.png') }}">
     <title>Kartu Ujian - {{ $student->user->name }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
@@ -368,6 +371,35 @@
             transform: translateY(0);
         }
 
+        /* ── Print button ── */
+        .btn-attendance {
+            display: block;
+            width: 100%;
+            padding: clamp(12px, 3.5vw, 14px);
+            background: linear-gradient(135deg, #ffffff, #f0f9ff);
+            color: #00591bff;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: clamp(13px, 3.5vw, 15px);
+            font-weight: 700;
+            font-family: 'Inter', Arial, sans-serif;
+            letter-spacing: 0.5px;
+            text-align: center;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-attendance:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-attendance:active {
+            transform: translateY(0);
+        }
+
         /* ── Print media ── */
         @media print {
             body {
@@ -534,7 +566,132 @@
         <button class="btn-print" onclick="window.print()">
             &#128424; Cetak Kartu Ujian
         </button>
+
+        @if(auth()->check() && auth()->user()->teacher)
+        <button class="btn-attendance" data-bs-toggle="modal" data-bs-target="#attendanceModal">
+            &#x1F44D; Absensi Ulangan
+        </button>
+        @endif
+
+        {{-- Flash messages --}}
+        @if(session('success') || session('error') || session('warning'))
+        <div class="card" style="padding: 12px 16px; margin-top: 0;">
+            @if(session('success'))
+            <div style="background: #dcfce7; color: #15803d; padding: 10px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                <span>&#10003;</span> {{ session('success') }}
+            </div>
+            @endif
+            @if(session('error'))
+            <div style="background: #fee2e2; color: #b91c1c; padding: 10px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                <span>&#10007;</span> {{ session('error') }}
+            </div>
+            @endif
+            @if(session('warning'))
+            <div style="background: #fef3c7; color: #92400e; padding: 10px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                <span>&#9888;</span> {{ session('warning') }}
+            </div>
+            @endif
+        </div>
+        @endif
+
+        {{-- Attendance Modal --}}
+        <div class="modal fade" id="attendanceModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+
+                    <div class="modal-header" style="background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%); color: white; border: none;">
+                        <h5 class="modal-title" style="font-weight: 700;">Absensi Ulangan</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        {{-- Info Siswa --}}
+                        <div style="background: #f0f9ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 12px 14px; margin-bottom: 16px;">
+                            <div style="font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: #64748b; margin-bottom: 4px;">Siswa yang diabsen</div>
+                            <div style="font-size: 14px; font-weight: 700; color: #0f172a;">{{ optional($student->user)->name ?? '-' }}</div>
+                            <div style="font-size: 12px; color: #475569;">{{ $student->identification_number ?? '-' }} &bull; {{ optional($student->classroom)->name ?? '-' }}</div>
+                        </div>
+
+                        {{-- Info Pengawas (auto-filled) --}}
+                        @if(isset($loggedInTeacher))
+                        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 12px 14px; margin-bottom: 16px;">
+                            <div style="font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: #64748b; margin-bottom: 4px;">Pengawas (Otomatis)</div>
+                            <div style="font-size: 14px; font-weight: 700; color: #0f172a;">{{ auth()->user()->name }}</div>
+                            <div style="font-size: 12px; color: #475569;">NIP: {{ $loggedInTeacher->nip ?? '-' }}</div>
+                        </div>
+                        @endif
+
+                        <form method="POST" action="{{ route('exam.attendance.store') }}">
+                            @csrf
+                            <input type="hidden" name="student_id" value="{{ $student->id }}">
+
+                            <div class="mb-3">
+                                <label class="form-label" style="font-weight: 600; font-size: 13px; color: #374151;">
+                                    Jadwal Ujian Hari Ini
+                                    <span style="font-size: 11px; color: #64748b; font-weight: 400;">({{ now()->translatedFormat('l, d F Y') }})</span>
+                                </label>
+
+                                @if(isset($todaySchedules) && $todaySchedules->count() > 0)
+                                <select name="schedule_exam_id" id="schedule_exam_id" class="form-control" required>
+                                    <option value="">Pilih Jadwal Mata Pelajaran</option>
+                                    @foreach($todaySchedules as $schedule)
+                                        @php
+                                            $alreadyAttended = isset($existingAttendances) && in_array($schedule->id, $existingAttendances);
+                                        @endphp
+                                        <option
+                                            value="{{ $schedule->id }}"
+                                            {{ $alreadyAttended ? 'disabled' : '' }}
+                                        >
+                                            {{ optional($schedule->subject)->name ?? 'Mata Pelajaran' }}
+                                            — {{ $schedule->category }}
+                                            @if($schedule->type) ({{ $schedule->type }}) @endif
+                                            @if($alreadyAttended) ✓ Sudah diabsen @endif
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                {{-- Daftar yang sudah diabsen --}}
+                                @if(isset($existingAttendances) && count($existingAttendances) > 0)
+                                <div style="margin-top: 10px; padding: 8px 12px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; font-size: 11px; color: #15803d;">
+                                    <strong>&#10003;</strong> {{ count($existingAttendances) }} dari {{ $todaySchedules->count() }} mata pelajaran sudah diabsen hari ini.
+                                </div>
+                                @endif
+
+                                @else
+                                <div style="padding: 20px; text-align: center; background: #fef3c7; border: 1px solid #fde68a; border-radius: 10px; color: #92400e;">
+                                    <div style="font-size: 24px; margin-bottom: 6px;">&#128197;</div>
+                                    <div style="font-size: 13px; font-weight: 600;">Tidak ada jadwal ujian hari ini</div>
+                                    <div style="font-size: 11px; margin-top: 4px;">Absensi hanya dapat dilakukan pada hari ujian berlangsung.</div>
+                                </div>
+                                @endif
+                            </div>
+
+                            @if(isset($todaySchedules) && $todaySchedules->count() > 0)
+                            <button type="submit" class="btn btn-success w-100" style="font-weight: 700; padding: 10px; border-radius: 10px;">
+                                &#10003; Simpan Absensi
+                            </button>
+                            @endif
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            $('#attendanceModal').on('shown.bs.modal', function() {
+                $('#schedule_exam_id').select2({
+                    dropdownParent: $('#attendanceModal'),
+                    placeholder: "Cari Jadwal Mata Pelajaran...",
+                    width: '100%'
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

@@ -16,7 +16,7 @@ class StudentForm
                     ->label('Name')
                     ->disabled()
                     ->dehydrated()
-                    ->afterStateHydrated(fn ($component, $record) => $component->state($record?->user?->name)),
+                    ->afterStateHydrated(fn($component, $record) => $component->state($record?->user?->name)),
                 TextInput::make('student_number')->label('No. Induk')->required(),
                 Select::make('classroom_id')->label('Class Room')->relationship('classroom', 'name')->required(),
                 Select::make('expertise_id')->label('Expertise')->relationship('expertise', 'name')->required(),

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SheetImportController;
+use App\Http\Controllers\ExamAttendanceController;
 
 Route::get('/', function () {
     return redirect('/app/login');
@@ -12,5 +13,30 @@ Route::get('/data/urole', [SheetImportController::class, 'urole']);
 
 // Kartu Ujian - menggunakan slug agar ID tidak terlihat
 Route::get('/kartu-ujian/{student:slug}', function (\App\Models\Student $student) {
-    return view('pdf.kartu-ujian', compact('student'));
+    $today = now()->toDateString();
+
+    // Jadwal ujian hari ini (start_date <= today <= end_date)
+    $todaySchedules = \App\Models\ScheduleExam::with(['subject', 'teacher.user'])
+        ->where('start_date', '<=', $today)
+        ->where('end_date', '>=', $today)
+        ->get();
+
+    // Jika user login sebagai guru, ambil data teacher
+    $loggedInTeacher = null;
+    if (auth()->check() && auth()->user()->teacher) {
+        $loggedInTeacher = auth()->user()->teacher;
+    }
+
+    // Cek absensi yang sudah ada hari ini untuk siswa ini
+    $existingAttendances = \App\Models\ExamAttendance::where('student_id', $student->id)
+        ->whereIn('schedule_exam_id', $todaySchedules->pluck('id'))
+        ->pluck('schedule_exam_id')
+        ->toArray();
+
+    return view('pdf.kartu-ujian', compact('student', 'todaySchedules', 'loggedInTeacher', 'existingAttendances'));
 })->name('kartu.ujian');
+
+// Absensi Ujian - POST route
+Route::post('/exam-attendance', [ExamAttendanceController::class, 'store'])
+    ->middleware('auth')
+    ->name('exam.attendance.store');
