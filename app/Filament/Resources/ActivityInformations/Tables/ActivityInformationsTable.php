@@ -25,6 +25,7 @@ class ActivityInformationsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with(['classrooms']))
             ->columns([
                 TextColumn::make('name')
                     ->label('Nama Kegiatan')

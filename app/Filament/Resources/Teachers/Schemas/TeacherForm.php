@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\Teachers\Schemas;
 
+use App\Helpers\ClassroomOptions;
 use App\Models\AcademicYear;
-use App\Models\Student;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
@@ -153,17 +153,7 @@ class TeacherForm
                                     Grid::make(6)->schema([
                                         Select::make('classroom_expertise')
                                             ->label('Kelas')
-                                            ->options(function () {
-                                                return Student::with(['classroom', 'expertise'])
-                                                    ->get()
-                                                    ->unique(fn($s) => $s->classroom_id . '_' . $s->expertise_id)
-                                                    ->sortBy(fn($s) => $s->classroom->name . ' ' . ($s->expertise->name ?? ''))
-                                                    ->mapWithKeys(function ($student) {
-                                                        $label = trim($student->classroom->name . ' ' . ($student->expertise->name ?? ''));
-                                                        $key   = $student->classroom_id . '_' . $student->expertise_id;
-                                                        return [$key => $label];
-                                                    });
-                                            })
+                                            ->options(fn () => ClassroomOptions::all())
                                             ->required()
                                             ->searchable()
                                             ->preload()

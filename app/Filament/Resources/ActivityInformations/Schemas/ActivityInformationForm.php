@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\ActivityInformations\Schemas;
 
-use App\Models\Student;
+use App\Helpers\ClassroomOptions;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -59,17 +59,7 @@ class ActivityInformationForm
                 Select::make('classrooms')
                     ->label('Pilih Kelas')
                     ->multiple()
-                    ->options(function () {
-                        return Student::with(['classroom', 'expertise'])
-                            ->get()
-                            ->unique(fn($s) => $s->classroom_id . '_' . $s->expertise_id)
-                            ->sortBy(fn($s) => $s->classroom->name . ' ' . ($s->expertise->name ?? ''))
-                            ->mapWithKeys(function ($student) {
-                                $label = trim($student->classroom->name . ' ' . ($student->expertise->name ?? ''));
-                                $key   = $student->classroom_id . '_' . $student->expertise_id; // ← $s diganti $student
-                                return [$key => $label];
-                            });
-                    })
+                    ->options(fn () => ClassroomOptions::all())
                     ->searchable()
                     ->preload()
                     ->native(false)

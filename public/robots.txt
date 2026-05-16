@@ -1,2 +1,6 @@
 User-agent: *
-Disallow:
+Disallow: /app/
+Disallow: /data/
+Disallow: /kartu-ujian/
+Disallow: /exam-attendance
+Allow: /

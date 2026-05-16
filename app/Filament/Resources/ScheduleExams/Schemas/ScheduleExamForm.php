@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\ScheduleExams\Schemas;
 
-use App\Models\Student;
+use App\Helpers\ClassroomOptions;
 use App\Models\Teacher;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
@@ -96,19 +96,7 @@ class ScheduleExamForm
                     ->multiple()
                     ->options(function (Get $get) {
                         $level = $get('target_class_level');
-
-                        return Student::with(['classroom', 'expertise'])
-                            ->whereHas('classroom', function ($query) use ($level) {
-                                $query->where('name', 'LIKE', $level . '%');
-                            })
-                            ->get()
-                            ->unique(fn($s) => $s->classroom_id . '_' . $s->expertise_id)
-                            ->sortBy(fn($s) => $s->classroom->name . ' ' . ($s->expertise->name ?? ''))
-                            ->mapWithKeys(function ($student) {
-                                $label = trim($student->classroom->name . ' ' . ($student->expertise->name ?? ''));
-                                $key   = $student->classroom_id . '_' . $student->expertise_id;
-                                return [$key => $label];
-                            });
+                        return ClassroomOptions::byLevel($level);
                     })
                     ->searchable()
                     ->preload()

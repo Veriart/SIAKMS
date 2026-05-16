@@ -29,6 +29,13 @@ class TeachersTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with([
+                'user',
+                'teachingAssignments.subject',
+                'teachingAssignments.classroom',
+                'teachingAssignments.expertise',
+                'additionalDuties.academicYear',
+            ]))
             ->columns([
                 TextColumn::make('user.name')
                     ->label('Nama')

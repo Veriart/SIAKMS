@@ -8,10 +8,13 @@ Route::get('/', function () {
     return redirect('/app/login');
 });
 
-Route::get('/data/sync-sheet', [SheetImportController::class, 'sync']);
-Route::get('/data/urole', [SheetImportController::class, 'urole']);
+// Data sync routes — hanya admin yang login yang boleh akses
+Route::middleware(['auth', 'throttle:10,1'])->group(function () {
+    Route::get('/data/sync-sheet', [SheetImportController::class, 'sync']);
+    Route::get('/data/urole', [SheetImportController::class, 'urole']);
+});
 
-// Kartu Ujian - menggunakan slug agar ID tidak terlihat
+// Kartu Ujian - hanya bisa diakses oleh user yang sudah login
 Route::get('/kartu-ujian/{student:slug}', function (\App\Models\Student $student) {
     $today = now()->toDateString();
 
@@ -34,9 +37,9 @@ Route::get('/kartu-ujian/{student:slug}', function (\App\Models\Student $student
         ->toArray();
 
     return view('pdf.kartu-ujian', compact('student', 'todaySchedules', 'loggedInTeacher', 'existingAttendances'));
-})->name('kartu.ujian');
+})->middleware('auth')->name('kartu.ujian');
 
-// Absensi Ujian - POST route
+// Absensi Ujian - POST route dengan rate limiting
 Route::post('/exam-attendance', [ExamAttendanceController::class, 'store'])
-    ->middleware('auth')
+    ->middleware(['auth', 'throttle:30,1'])
     ->name('exam.attendance.store');

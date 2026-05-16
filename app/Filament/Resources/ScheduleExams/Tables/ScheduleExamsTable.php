@@ -27,6 +27,12 @@ class ScheduleExamsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with([
+                'academicYear',
+                'subject',
+                'teacher.user',
+                'classrooms',
+            ]))
             ->columns([
                 TextColumn::make('category')
                     ->label('Kategori')
