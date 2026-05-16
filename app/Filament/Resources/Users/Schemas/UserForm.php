@@ -2,9 +2,10 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
-use App\Models\Role;
+use Spatie\Permission\Models\Role;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Schemas\Components\Grid;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
@@ -37,12 +38,6 @@ class UserForm
                                 ->required()
                                 ->dehydrated(fn($state) => filled($state)),
 
-                            Select::make('role_id')
-                                ->label('Role')
-                                ->options(Role::pluck('name', 'id')->toArray())
-                                ->live()
-                                ->required(),
-
                             Select::make('status')
                                 ->label('Status')
                                 ->options([
@@ -52,6 +47,15 @@ class UserForm
                                 ->default('Active')
                                 ->required(),
                         ]),
+
+                    CheckboxList::make('roles')
+                        ->label('Roles')
+                        ->relationship('roles', 'name')
+                        ->columns(3)
+                        ->searchable()
+                        ->bulkToggleable()
+                        ->required()
+                        ->live(),
                 ]),
 
             Grid::make([
@@ -101,7 +105,10 @@ class UserForm
                         ->columnSpanFull()
                         ->visible(
                             fn(Get $get) =>
-                            Role::find($get('role_id'))?->name === 'Student'
+                            in_array(
+                                Role::where('name', 'Student')->first()?->id,
+                                $get('roles') ?? []
+                            )
                         ),
 
                     Section::make('Teacher Data')
@@ -112,7 +119,7 @@ class UserForm
                                 'md' => 2,
                             ])
                                 ->schema([
-                                    TextInput::make('nip')->label('NIP')->required(),
+                                    TextInput::make('identification_number')->label('NIP')->required(),
                                     Select::make('gender')
                                         ->label('Gender')
                                         ->options([
@@ -146,7 +153,10 @@ class UserForm
                         ->columnSpanFull()
                         ->visible(
                             fn(Get $get) =>
-                            Role::find($get('role_id'))?->name === 'Teacher'
+                            in_array(
+                                Role::where('name', 'Teacher')->first()?->id,
+                                $get('roles') ?? []
+                            )
                         ),
                 ]),
         ]);

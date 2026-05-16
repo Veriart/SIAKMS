@@ -55,6 +55,14 @@ class Teacher extends Model
     }
 
     /**
+     * Relasi berkas/dokumen guru.
+     */
+    public function documents()
+    {
+        return $this->hasMany(TeacherDocument::class);
+    }
+
+    /**
      * Get total jam mengajar untuk periode (academic_year_id) tertentu.
      */
     public function getTotalHours(?int $academicYearId = null): int

@@ -3,8 +3,7 @@
 namespace App\Filament\Resources\Users\Tables;
 
 use App\Filament\Concerns\ExportHelper;
-use components;
-use App\Models\Role;
+
 use Filament\Tables\Table;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
@@ -20,7 +19,7 @@ class UsersTable
         return [
             'name' => 'Nama',
             'email' => 'Email',
-            'role.name' => 'Role',
+            'roles.name' => 'Roles',
             'status' => 'Status',
         ];
     }
@@ -37,9 +36,9 @@ class UsersTable
                     ->label('Email')
                     ->searchable()
                     ->sortable(),
-                SelectColumn::make('role_id')
-                    ->label('Role')
-                    ->options(Role::pluck('name', 'id')->toArray())
+                TextColumn::make('roles.name')
+                    ->label('Roles')
+                    ->badge()
                     ->searchable()
                     ->sortable(),
                 // SelectColumn::make('custom_fields.gender')

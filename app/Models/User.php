@@ -13,27 +13,6 @@ use Filament\Models\Contracts\HasAvatar;
 
 class User extends Authenticatable implements HasAvatar
 {
-    protected static function booted()
-    {
-        static::created(function ($user) {
-            if ($user->role_id) {
-                $role = Role::find($user->role_id);
-                if ($role) {
-                    $user->syncRoles([$role->name]);
-                }
-            }
-        });
-
-        static::updated(function ($user) {
-            if ($user->wasChanged('role_id')) {
-                $role = Role::find($user->role_id);
-                if ($role) {
-                    $user->syncRoles([$role->name]);
-                }
-            }
-        });
-    }
-    
     use HasFactory, Notifiable, HasRoles;
 
     /**
@@ -44,7 +23,6 @@ class User extends Authenticatable implements HasAvatar
         'name',
         'email',
         'password',
-        'role_id',
         'status',
         'photo',
         'custom_fields',
@@ -71,11 +49,6 @@ class User extends Authenticatable implements HasAvatar
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
-    }
-
-    public function role()
-    {
-        return $this->belongsTo(Role::class);
     }
 
     public function teacher()

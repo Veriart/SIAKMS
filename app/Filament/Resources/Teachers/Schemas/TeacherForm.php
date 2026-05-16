@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Teachers\Schemas;
 use App\Helpers\ClassroomOptions;
 use App\Models\AcademicYear;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -27,6 +28,32 @@ class TeacherForm
                 $ay->id => $ay->in . ' - ' . ($ay->in + 1),
             ])
             ->toArray();
+    }
+
+    /**
+     * Opsi nama dokumen umum yang sering dibutuhkan guru.
+     */
+    private static function documentNameOptions(): array
+    {
+        return [
+            'KTP' => 'KTP',
+            'Kartu Keluarga' => 'Kartu Keluarga',
+            'Ijazah SMA/SMK' => 'Ijazah SMA/SMK',
+            'Ijazah D3' => 'Ijazah D3',
+            'Ijazah D4' => 'Ijazah D4',
+            'Ijazah S1' => 'Ijazah S1',
+            'Ijazah S2' => 'Ijazah S2',
+            'Ijazah S3' => 'Ijazah S3',
+            'Transkrip Nilai' => 'Transkrip Nilai',
+            'Sertifikat Pendidik' => 'Sertifikat Pendidik',
+            'SK Pengangkatan' => 'SK Pengangkatan',
+            'SKCK' => 'SKCK',
+            'Surat Keterangan Sehat' => 'Surat Keterangan Sehat',
+            'NPWP' => 'NPWP',
+            'BPJS' => 'BPJS',
+            'Pas Foto' => 'Pas Foto',
+            'Lainnya' => 'Lainnya',
+        ];
     }
 
     public static function configure(Schema $schema): Schema
@@ -123,6 +150,50 @@ class TeacherForm
                                 ->required()
                                 ->native(false),
                         ]),
+                    ]),
+
+                Section::make('Berkas Dokumen')
+                    ->icon('heroicon-o-document-arrow-up')
+                    ->description('Upload berkas kebutuhan guru: KTP, KK, Ijazah, Sertifikat, dll.')
+                    ->collapsible()
+                    ->schema([
+                        Repeater::make('documents')
+                            ->label('')
+                            ->relationship()
+                            ->schema([
+                                Grid::make(12)->schema([
+                                    Select::make('document_name')
+                                        ->label('Jenis Dokumen')
+                                        ->options(static::documentNameOptions())
+                                        ->required()
+                                        ->searchable()
+                                        ->native(false)
+                                        ->columnSpan(4),
+                                    FileUpload::make('file_path')
+                                        ->label('File')
+                                        ->directory('teacher-documents')
+                                        ->acceptedFileTypes([
+                                            'application/pdf',
+                                            'image/jpeg',
+                                            'image/png',
+                                            'image/webp',
+                                        ])
+                                        ->maxSize(5120) // 5MB
+                                        ->openable()
+                                        ->downloadable()
+                                        ->previewable()
+                                        ->columnSpan(5),
+                                    Textarea::make('notes')
+                                        ->label('Catatan')
+                                        ->rows(1)
+                                        ->placeholder('Opsional')
+                                        ->columnSpan(3),
+                                ]),
+                            ])
+                            ->defaultItems(0)
+                            ->addActionLabel('+ Tambah Dokumen')
+                            ->reorderable(false)
+                            ->columns(1),
                     ]),
 
                 Section::make('Penugasan Mengajar')

@@ -22,6 +22,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use App\Filament\Resources\Teachers\TeacherResource;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
 use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
 
@@ -67,6 +68,13 @@ class AppPanelProvider extends PanelProvider
                         : '#')
                     ->openUrlInNewTab()
                     ->visible(fn () => auth()->user()?->hasRole('Student') && auth()->user()?->student),
+                'edit_data_saya' => Action::make('edit_data_saya')
+                    ->label('Edit Data Saya')
+                    ->icon('heroicon-o-pencil-square')
+                    ->url(fn () => auth()->user()?->teacher
+                        ? TeacherResource::getUrl('edit', ['record' => auth()->user()->teacher->id])
+                        : '#')
+                    ->visible(fn () => auth()->user()?->hasRole('Teacher') && auth()->user()?->teacher),
             ])
             ->maxContentWidth('full')
             ->navigationGroups([

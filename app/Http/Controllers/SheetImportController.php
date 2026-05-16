@@ -81,11 +81,10 @@ class SheetImportController extends Controller
                     'name'      => $user['name'],
                     'email'     => $user['email'],
                     'password'  => bcrypt($user['password']),
-                    'role_id'   => 3,
                     'status'    => 'Active',
                 ]);
 
-                $new_user->syncRoles([roleName(3)]);
+                $new_user->syncRoles(['Teacher']);
 
                 $new_teacher = Teacher::create([
                     'user_id'       => $new_user->id,
