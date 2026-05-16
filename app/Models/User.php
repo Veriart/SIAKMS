@@ -7,13 +7,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Laravel\Sanctum\HasApiTokens;
 use App\Models\{Role, Subject, Student, Teacher};
 use Illuminate\Support\Facades\Storage;
 use Filament\Models\Contracts\HasAvatar;
 
 class User extends Authenticatable implements HasAvatar
 {
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable, HasRoles, HasApiTokens;
 
     /**
      *

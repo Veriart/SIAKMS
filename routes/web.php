@@ -8,6 +8,11 @@ Route::get('/', function () {
     return redirect('/app/login');
 });
 
+// API Documentation — public, tanpa login
+Route::get('/docs/api', function () {
+    return view('api-docs');
+})->name('api.docs');
+
 // Data sync routes — hanya admin yang login yang boleh akses
 Route::middleware(['auth', 'throttle:10,1'])->group(function () {
     Route::get('/data/sync-sheet', [SheetImportController::class, 'sync']);
